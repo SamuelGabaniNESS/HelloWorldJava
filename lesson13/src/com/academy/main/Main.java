@@ -1,5 +1,6 @@
 package com.academy.main;
 
+import com.academy.Book;
 import com.academy.Calculator;
 import com.academy.Incrementor;
 
@@ -61,6 +62,7 @@ public class Main {
         //STREAM
         // list a stream sa daju konvertovat navzajom
         // obe su udajova struktura
+        // 2 typy streamov: konecny a nekonecny
         // 3 typy operacii nad streamom: generator (streamu), intermediate operatory, terminalny operator (ukoncenie streamu)
         List<Integer> l = new ArrayList<>();
         l.add(10);
@@ -69,7 +71,34 @@ public class Main {
 
         Stream<Integer> s = l.stream();
 
-        //zobere kazdy prvok streamu a vykonna operaciu
-        s.forEach(A-> System.out.println(A));
+        // forEach zobere kazdy prvok streamu a vykonna operaciu - terminal operator
+        // limit obmedzuje pocet prvkov ktore berieme -intermediate operator
+        s.limit(2).forEach(A-> System.out.println(A));
+
+        // nemozme vytvorit new Stream()
+        Stream.of(10,20,30,40).limit(2).forEach(A -> System.out.println(A));
+        //Stream.empty();
+
+        // nekonecny stream:
+        // keby nebol limit tak ide do nekonecna
+        // streamy su lazy, to znamena ze nevykonna operaciu co nemusi, to znamena ze po
+        // limit uz sa neplni stream dalsimi hodnotami
+        Stream.iterate(0,A->A+10).limit(5).forEach(A-> System.out.println(A));
+        Stream<Integer> s2 = Stream.iterate(10,A->A-5).limit(10); // vytvori prvky az ked zavolame forEach
+        s2.forEach(A-> System.out.println(A));
+
+        Stream<Integer> s3 = Stream.iterate(0,A->A+10);
+        // intermediate operatory
+        s3
+                .limit(10) // obmedzuje pocet prvkov s ktorymi
+                .map(A->A+3) // pre kazdy prvok streamu vykonna operaciu
+                .forEach(A-> System.out.println(A));
+        //Stream.of(10,20).map(A->A+6).forEach(A-> System.out.println(A));
+        List<Book> b = new ArrayList<>();
+        b.add(new Book());
+        b.add(new Book());
+        b.add(new Book());
+        // ziskaj nazvy kniziek cez streamy
+        b.stream().map(A -> A.getName()).forEach(A -> System.out.println(A));
     }
 }
