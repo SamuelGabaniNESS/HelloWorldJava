@@ -6,6 +6,8 @@ import com.academy.Incrementor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Main {
@@ -90,8 +92,11 @@ public class Main {
         Stream<Integer> s3 = Stream.iterate(0,A->A+10);
         // intermediate operatory
         s3
-                .limit(10) // obmedzuje pocet prvkov s ktorymi
+                .skip(3) // skipne urcity pocet prvkov
+                .limit(10) // obmedzuje pocet prvkov s ktorymi pracuje
                 .map(A->A+3) // pre kazdy prvok streamu vykonna operaciu
+                .filter(A -> A<50 && A>20) // filtruje prvky ktore splnaju podmienku, iba tie pusti dalej do streamu
+                // ! BEZ TERMINALNEHO OPERATORU SA NEVYKONNA ZIADNY INTERMEDIATE !
                 .forEach(A-> System.out.println(A));
         //Stream.of(10,20).map(A->A+6).forEach(A-> System.out.println(A));
         List<Book> b = new ArrayList<>();
@@ -99,6 +104,31 @@ public class Main {
         b.add(new Book());
         b.add(new Book());
         // ziskaj nazvy kniziek cez streamy
-        b.stream().map(A -> A.getName()).forEach(A -> System.out.println(A));
+        b.stream().map(A -> A.getName()).forEach(A -> System.out.print(A+", "));
+
+        // sorted() zoradi prvky streamu --- ! NEPOUZIVAT S NEKONECNYMI STREAMAMI
+        Stream.of(10,5,17,10,9,11).distinct().sorted().forEach(A-> System.out.println(A));
+
+        // ked sa stream uzavrie nie je mozne nad nim volat dalsie operacie, kedze bol terminovany terminalnym op.
+        Stream<Integer> s4 = Stream.iterate(0,A->A+10);
+        //s4.limit(10).forEach(A-> System.out.print(A+", "));
+        //s4.limit(10).forEach(A-> System.out.print(A+", "));
+
+        Stream<Integer> s5 = Stream.of(10,20,30,40,50);
+        // count() znici stream a vrati pocet prvkov
+        //System.out.println(s5.count());
+
+        // collect() transformuj stream do inej udajovej struktury ale znici strema
+        //List<Integer> l2 = s5.collect(Collectors.toList());
+        //System.out.println(l2);
+
+        //allMatch() ci plati pre vsetky prvky streamu, anyMatch() pre niektory, atd.
+        System.out.println(s5.allMatch(A->A<60));
+        s5 = Stream.of(10,20,30,40,50);
+        System.out.println(s5.anyMatch(A->A>20));
+        s5 = Stream.of(10,20,30,40,50);
+        System.out.println(s5.noneMatch(A->A==75));
+
+
     }
 }
