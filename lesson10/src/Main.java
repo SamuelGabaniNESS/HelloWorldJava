@@ -50,6 +50,12 @@ public class Main {
         }finally {
             System.out.println("Vykona sa tak ci tak");
         }
+//        try{
+//            System.out.println("ok");
+//        }
+//        finally{
+//            System.out.println("da sa");
+//        }
         System.out.println("Po chybe");
 
     }
